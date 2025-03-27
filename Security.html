@@ -1,0 +1,154 @@
+<!-- Proteções de Cabeçalhos de Segurança -->
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';               /* Permite apenas conteúdo do próprio site */
+    script-src 'self';                /* Restringe scripts apenas ao site */
+    style-src 'self';                 /* Restringe estilos apenas ao site */
+    img-src 'self' data:;             /* Permite imagens apenas do próprio site e do tipo data URI */
+    frame-ancestors 'none';           /* Impede que o site seja incorporado em iframes */
+    form-action 'self';               /* Restringe o envio de formulários apenas ao próprio site */
+    object-src 'none';                /* Bloqueia o carregamento de objetos (ex.: Flash, Java) */
+    upgrade-insecure-requests;        /* Força o uso de HTTPS em recursos */
+">
+
+<!-- Proteções Contra Clickjacking -->
+<meta http-equiv="X-Frame-Options" content="DENY"> <!-- Impede que o site seja carregado dentro de um iframe -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff"> <!-- Previne que o navegador identifique mal o tipo de conteúdo -->
+<meta http-equiv="Referrer-Policy" content="no-referrer"> <!-- Impede o envio de informações de referrer -->
+
+<!-- Bloquear o uso de 'right-click' (Botão Direito do Mouse) -->
+<script>
+    document.addEventListener("contextmenu", function(event) {
+        event.preventDefault();  // Impede o menu de contexto (botão direito do mouse)
+    });
+</script>
+
+<!-- Bloquear uso de teclas de atalho do navegador para inspecionar o código -->
+<script>
+    document.onkeydown = function(event) {
+        if (event.keyCode == 123) {  // F12 (DevTools)
+            event.preventDefault(); 
+        }
+        if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {  // Ctrl + Shift + I (Inspecionar)
+            event.preventDefault();
+        }
+        if (event.ctrlKey && event.keyCode == 85) {  // Ctrl + U (Exibir código fonte)
+            event.preventDefault();
+        }
+    };
+</script>
+
+<!-- Proteções para Evitar Cross-Site Scripting (XSS) -->
+<script>
+    // Função para sanitizar entradas de usuários e prevenir XSS
+    function sanitizeInput(input) {
+        return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Exemplo de como aplicar a sanitização (adicione isso onde for necessário)
+    let userInput = sanitizeInput(document.getElementById('user-input').value);
+</script>
+
+<!-- Proteção contra CSRF (Cross-Site Request Forgery) -->
+<script>
+    // Gerar um token CSRF para validar a origem das requisições
+    function generateCSRFToken() {
+        return Math.random().toString(36).substr(2); // Gera um token aleatório simples
+    }
+
+    // Exemplo de uso: Adicionar o token CSRF nas requisições
+    let csrfToken = generateCSRFToken();
+
+    // Enviar o token no cabeçalho das requisições AJAX
+    function sendRequest() {
+        fetch('/api/endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken  // Incluir o token CSRF
+            },
+            body: JSON.stringify({ data: 'exemplo' })
+        });
+    }
+</script>
+
+<!-- Proteção contra HTTP Response Splitting -->
+<script>
+    // Garantir que os dados não sejam injetados diretamente no cabeçalho
+    function preventHttpSplitting() {
+        // Impedir que dados de entrada influenciem os cabeçalhos HTTP
+        let userInput = document.getElementById('user-input').value;
+        let sanitizedInput = encodeURIComponent(userInput); // Codifica o input
+        return sanitizedInput;
+    }
+</script>
+
+<!-- Proteger o conteúdo contra download direto de scripts maliciosos -->
+<script>
+    // A função abaixo bloqueia a execução de scripts de fontes não confiáveis
+    if (window.location.protocol !== "https:") {
+        window.location.href = "https://" + window.location.hostname + window.location.pathname;
+    }
+</script>
+
+<!-- Bloquear Execução de Scripts de Fontes Externas -->
+<script>
+    const scriptSrc = ['self'];  // Só permite scripts do próprio domínio
+    document.addEventListener('DOMContentLoaded', function() {
+        let scripts = document.getElementsByTagName('script');
+        for (let i = 0; i < scripts.length; i++) {
+            let src = scripts[i].src;
+            if (src && !scriptSrc.includes(src.split('/')[2])) {
+                scripts[i].parentNode.removeChild(scripts[i]);
+            }
+        }
+    });
+</script>
+
+<!-- Impedir Redirecionamento HTTP -->
+<script>
+    // Impede que o site redirecione para outras URLs sem permissão
+    function preventRedirect() {
+        let currentUrl = window.location.href;
+        let allowedDomains = ["www.seusite.com", "seusite.com"]; // Defina os domínios permitidos
+        let isValid = allowedDomains.some(domain => currentUrl.includes(domain));
+        
+        if (!isValid) {
+            window.location.href = "/erro";
+        }
+    }
+    preventRedirect();
+</script>
+
+<!-- Proteção contra ataques de DDoS -->
+<script>
+    // Implementação simples de um contador de requisições para prevenir abusos
+    let requestCount = 0;
+    let maxRequests = 100; // Limite de requisições por minuto
+    let timeWindow = 60000; // 1 minuto em milissegundos
+
+    setInterval(function() {
+        requestCount = 0;  // Reseta o contador a cada minuto
+    }, timeWindow);
+
+    function trackRequests() {
+        requestCount++;
+        if (requestCount > maxRequests) {
+            alert("Limite de requisições atingido. Tente novamente mais tarde.");
+            return false;  // Bloqueia a requisição se ultrapassar o limite
+        }
+        return true;
+    }
+
+    // Exemplo de uso:
+    if (trackRequests()) {
+        // Continuar com a execução da requisição...
+    }
+</script>
+
+<!-- Desabilitar a execução de códigos JavaScript diretamente de URLs externas -->
+<script>
+    if (window.location.href.includes('javascript:')) {
+        alert('Execução de código JavaScript diretamente da URL foi bloqueada!');
+        window.location.href = '/';  // Redireciona para a página inicial
+    }
+</script>
