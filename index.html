@@ -1,221 +1,163 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ArcadeWorld - Servidor Minecraft</title>
   <style>
-    /* Fonte inspirada no Minecraft (caso tenha, senão usa sans-serif) */
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-    
-    /* Reset básico e estilização global */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Press Start 2P', cursive, sans-serif;
-      background: #1a001a; /* tom escuro de roxo */
-      color: #e0e0e0;
-      overflow-x: hidden;
-    }
-    
-    /* Tela de abertura (Splash Screen) */
-    #splash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #splash-text {
-      font-size: 40px;
-      text-align: center;
-      letter-spacing: 2px;
-      opacity: 0;
-      animation: textAnim 3s forwards;
-    }
-    .arcade {
-      color: #a020f0; /* roxo neon */
-    }
-    .world {
-      color: #39ff14; /* verde neon */
-    }
-    @keyframes textAnim {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      20% {
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1);
-      }
-      60% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1.2);
-      }
-    }
-    .fade-out {
-      animation: fadeOut 1s forwards;
-    }
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-    
-    /* Conteúdo principal do site */
-    #main-content {
-      display: none;
-      animation: fadeIn 1s forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    header {
-      background: linear-gradient(135deg, #3a003a, #000);
-      padding: 30px 20px;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 3em;
-      color: #a020f0;
-      margin-bottom: 10px;
-    }
-    header p {
-      font-size: 1.2em;
-      color: #e0e0e0;
-    }
-    main {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .section {
-      margin-bottom: 50px;
-    }
-    .section h2 {
-      font-size: 2em;
-      color: #a020f0;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-    }
-    .section p, .section li {
-      font-size: 1.1em;
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-    ul {
-      list-style: inside square;
-      margin-top: 10px;
-    }
-    .button {
-      background-color: #a020f0;
-      color: #fff;
-      padding: 15px 30px;
-      text-decoration: none;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background 0.3s ease;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    .button:hover {
-      background-color: #7a00b8;
-    }
-    footer {
-      background: #000;
-      padding: 20px;
-      text-align: center;
-      color: #e0e0e0;
-      font-size: 0.9em;
-    }
-    footer a {
-      color: #39ff14;
-      text-decoration: none;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
+    /* Fonte inspirada no Minecraft */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');/* Reset básico e estilização global */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Press Start 2P', cursive, sans-serif;
+  background: #1a001a;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+/* Splash Screen */
+#splash {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+#splash-text { font-size: 40px; text-align: center; letter-spacing: 2px; opacity: 0; animation: textAnim 3s forwards; }
+.arcade { color: #a020f0; }
+.world { color: #39ff14; }
+@keyframes textAnim {
+  0% { transform: scale(0.5); opacity: 0; }
+  20% { opacity: 1; }
+  50% { transform: scale(1); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1.2); }
+}
+.fade-out { animation: fadeOut 1s forwards; }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Conteúdo Principal */
+#main-content { display: none; animation: fadeIn 1s forwards; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Anúncio de novo dono */
+#owner-announcement {
+  display: none;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.2em;
+}
+#random-name { color: yellow; }
+
+/* Header e seções */
+header {
+  background: linear-gradient(135deg, #3a003a, #000);
+  padding: 30px 20px;
+  text-align: center;
+}
+header h1 { font-size: 3em; color: #a020f0; margin-bottom: 10px; }
+header h1 .world { color: #39ff14; }
+header p { font-size: 1.2em; }
+main { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+.section { margin-bottom: 50px; }
+.section h2 { font-size: 2em; color: #a020f0; margin-bottom: 20px; text-transform: uppercase; }
+.section p, .section li { font-size: 1.1em; line-height: 1.6; margin-bottom: 10px; }
+ul { list-style: inside square; margin-top: 10px; }
+.button {
+  background-color: #a020f0;
+  color: #fff; padding: 15px 30px;
+  text-decoration: none; border: none; border-radius: 5px;
+  cursor: pointer; font-size: 1em;
+  transition: background 0.3s ease;
+  display: inline-block; margin-top: 20px;
+}
+.button:hover { background-color: #7a00b8; }
+footer {
+  background: #000; padding: 20px;
+  text-align: center; color: #e0e0e0; font-size: 0.9em;
+}
+footer a { color: #39ff14; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  header h1 { font-size: 2.5em; }
+  header p { font-size: 1em; }
+  main { padding: 20px; }
+  .section h2 { font-size: 1.5em; }
+  .section p, .section li { font-size: 1em; }
+  .button { padding: 10px 20px; font-size: 0.9em; }
+}
+@media (min-width: 1200px) {
+  main { max-width: 1200px; }
+  header h1 { font-size: 4em; }
+  header p { font-size: 1.5em; }
+}
+
   </style>
 </head>
-<body>
-
-  <!-- Tela de Abertura (Splash) -->
-  <div id="splash">
+<body>  <!-- Splash -->  <div id="splash">
     <div id="splash-text">
       <span class="arcade">Arcade</span><span class="world">World</span>
     </div>
-  </div>
+  </div>  <!-- Conteúdo Principal -->  <div id="main-content">
+    <!-- Anúncio de novo dono -->
+    <div id="owner-announcement">Novo dono da ArcadeWorld é <span id="random-name">Random</span></div><header>
+  <h1>Arcade<span class="world">World</span></h1>
+  <p>O melhor servidor de Minecraft para diversão e aventura!</p>
+</header>
 
-  <!-- Conteúdo Principal -->
-  <div id="main-content">
-    <header>
-      <h1>ArcadeWorld</h1>
-      <p>O melhor servidor de Minecraft para diversão e aventura!</p>
-    </header>
+<main>
+  <section class="section" id="sobre">
+    <h2>Sobre o Servidor</h2>
+    <p>ArcadeWorld é um servidor criado com muito carinho para proporcionar a melhor experiência de Minecraft. Aqui, cada bloco conta uma história e cada jogador faz parte dessa aventura épica.</p>
+    <p>Criado por Foguin e Shadow, o servidor é um espaço para todos que buscam diversão, criatividade e comunidade!</p>
+  </section>
 
-    <main>
-      <section class="section" id="sobre">
-        <h2>Sobre o Servidor</h2>
-        <p>ArcadeWorld é um servidor criado com muito carinho para proporcionar a melhor experiência de Minecraft. Aqui, cada bloco conta uma história e cada jogador faz parte dessa aventura épica.</p>
-        <p>Criado por Foguin e Shadow, o servidor é um espaço para todos que buscam diversão, criatividade e comunidade!</p>
-      </section>
+  <section class="section" id="como-jogar">
+    <h2>Como Jogar</h2>
+    <p>Siga os passos abaixo para se conectar e começar sua jornada:</p>
+    <ul>
+      <li>Abrir o Minecraft.</li>
+      <li>Clicar em "Multijogador".</li>
+      <li>Clicar em "Adicionar servidor".</li>
+      <li>Preencher com as informações:</li>
+    </ul>
+    <p><strong>IP:</strong> ArcadeWorld-mWRa.aternos.me</p>
+    <p><strong>Porta:</strong> 24590</p>
+    <a href="#" class="button">Entrar no Servidor</a>
+  </section>
 
-      <section class="section" id="como-jogar">
-        <h2>Como Jogar</h2>
-        <p>Siga os passos abaixo para se conectar e começar sua jornada:</p>
-        <ul>
-          <li>Abrir o Minecraft.</li>
-          <li>Clicar em "Multijogador".</li>
-          <li>Clicar em "Adicionar servidor".</li>
-          <li>Preencher com as informações:</li>
-        </ul>
-        <p><strong>IP:</strong> ArcadeWorld-mWRa.aternos.me</p>
-        <p><strong>Porta:</strong> 24590</p>
-        <a href="#" class="button">Entrar no Servidor</a>
-      </section>
+  <section class="section" id="discord">
+    <h2>Conecte-se ao Discord</h2>
+    <p>Junte-se à nossa comunidade no Discord para interagir com outros jogadores, receber atualizações e participar de eventos exclusivos!</p>
+    <a href="https://discord.gg/ubPzDvgg" target="_blank" class="button">Entrar no Discord</a>
+  </section>
+</main>
 
-      <section class="section" id="discord">
-        <h2>Conecte-se ao Discord</h2>
-        <p>Junte-se à nossa comunidade no Discord para interagir com outros jogadores, receber atualizações e participar de eventos exclusivos!</p>
-        <a href="https://discord.gg/6hkufWFA" target="_blank" class="button">Entrar no Discord</a>
-      </section>
-    </main>
+<footer>
+  <p>&copy; 2025 ArcadeWorld. Todos os direitos reservados.</p>
+  <p>Criado por <strong>Foguin</strong> e <strong>Shadow</strong></p>
+</footer>
 
-    <footer>
-      <p>&copy; 2025 ArcadeWorld. Todos os direitos reservados.</p>
-      <p>Criado por <strong>Foguin</strong> e <strong>Shadow</strong></p>
-    </footer>
-  </div>
-
-  <!-- Script para transição do Splash para o Conteúdo Principal -->
-  <script>
+  </div>  <!-- Script para transições e anúncio -->  <script>
     window.addEventListener("load", function() {
-      // Exibe a tela de splash por 3 segundos
-      setTimeout(function(){
-        // Aplica a animação de fade-out no splash
+      setTimeout(function() {
+        // Fade out splash
         document.getElementById('splash').classList.add('fade-out');
-        // Após 1 segundo (tempo do fade-out), oculta o splash e mostra o conteúdo principal
-        setTimeout(function(){
+        setTimeout(function() {
+          // Esconde splash, mostra conteúdo
           document.getElementById('splash').style.display = 'none';
           document.getElementById('main-content').style.display = 'block';
+
+          // Exibe anúncio de novo dono e remove após alguns segundos
+          var ann = document.getElementById('owner-announcement');
+          ann.style.display = 'block';
+          setTimeout(function() {
+            ann.classList.add('fade-out');
+            setTimeout(function() { ann.remove(); }, 1000);
+          }, 4000);
         }, 1000);
       }, 3000);
     });
-  </script>
-
-</body>
+  </script></body>
 </html>
